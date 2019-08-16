@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework.routers import SimpleRouter
+from finger_print.views import (FingerPrintScannerViewset, )
 
+router = SimpleRouter()
+router.register(r'finger', FingerPrintScannerViewset, base_name="finger_print")
 urlpatterns = [  # pylint: disable=C0103
     path('admin/', admin.site.urls),
-]
+] + router.urls

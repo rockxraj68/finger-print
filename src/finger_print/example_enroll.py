@@ -15,7 +15,7 @@ import sys
 ## Enrolls new finger
 ##
 
-def en_roll(name):
+def enroll(name):
     ## Tries to initialize the sensor
     try:
         f = PyFingerprint('/dev/ttyUSB0', 57600, 0xFFFFFFFF, 0x00000000)
@@ -26,6 +26,7 @@ def en_roll(name):
     except Exception as e:
         print('The fingerprint sensor could not be initialized!')
         print('Exception message: ' + str(e))
+        return {"error" : str(e)}
         exit(1)
 
         ## Gets some sensor information
@@ -65,7 +66,7 @@ def en_roll(name):
         ## Compares the charbuffers
         if ( f.compareCharacteristics() == 0 ):
             raise Exception('Fingers do not match')
-
+        
         ## Creates a template
         f.createTemplate()
 
@@ -73,10 +74,12 @@ def en_roll(name):
         positionNumber = f.storeTemplate()
         print('Finger enrolled successfully!')
         print('New template position #' + str(positionNumber))
-        p = Person(name=name, bio_id=int(str(positionNumber)))
-        p.save()
-        print(p)
+        # p = Person(name=name, bio_id=int(str(positionNumber)))
+        # p.save()
+        # print(p)
+        return {"error" : None, "pos" :str(positionNumber)}
     except Exception as e:
         print('Operation failed!', e)
         print('Exception message: ' + str(e))
+        return {"error" : str(e)}
         exit(1)
